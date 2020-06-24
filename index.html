@@ -1,0 +1,92 @@
+<!doctype html>
+<html ng-app>
+
+<head>
+  <title>Lista de compras com AngularJS</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/toastr.css">
+  <link rel="stylesheet" href="css/application.css">
+</head>
+
+<body>
+  <div class="container list-container" ng-controller="ListaComprasController">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="input-group my-3">
+          <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon1">Search</button>
+          </div>
+          <input type="text" class="form-control" ng-model="search" placeholder=""
+            aria-label="Example text with button addon"
+            aria-describedby="button-addon1">
+        </div>
+      </div>
+      <div class="col-md-3 offset-md-6">
+        <button class="btn btn-blue btn-small my-3" ng-click="addItemPopup()">
+          <i class="icon-pencil icon-white"></i> Create new agent
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <table id="list-table" class="table">
+          <thead>
+            <tr>
+              <th>Agent Name</th>
+              <th>Owner</th>
+              <th>Updated On</th>
+              <th>Errors</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in itens | filter:search" class="comprado-{{ item.comprado }}">
+              <td>
+                <a class="avatar-wrap" ng-href="">
+                  <div class="avatar default">
+                    <span>{{item.name.substring(0, 2);}}</span>
+                  </div>
+                </a>
+                <strong>{{ item.name }}</strong>
+              </td>
+              <td>{{ item.owner }}</td>
+              <td>{{ item.updated_at || 'Jun 26, 07:43 PM'}}</td>
+              <td>0</td>
+              <td>
+                <button class="btn btn-blue btn-small" ng-click="editarItem($index)">
+                  <i class="icon-pencil icon-white"></i> Edit
+                </button>
+                <button class="btn btn-blue btn-small" ng-click="deleteItem($index)">
+                  <i class="icon-trash icon-white"></i> Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <form class="row form-inline" style="display: none;" name="validarValoresPreenchidos">
+      <input type="text" ng-model="item.name" placeholder="Name" required>
+      <input type="text" ng-model="item.owner" placeholder="Owner" class="input-small" required>
+      <button ng-hide="edit" class="btn btn-success" ng-disabled="validarValoresPreenchidos.$invalid"
+        ng-click="adicionaItem()">
+        <i class="icon-plus icon-white"></i> adicionar
+      </button>
+      <button ng-show="edit" class="btn btn-success" ng-disabled="validarValoresPreenchidos.$invalid"
+        ng-click="applyChanges()">
+        <i class="icon-ok icon-white"></i> salvar
+      </button>
+    </form>
+  </div>
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/angular.min.js"></script>
+  <script src="lib/toastr.min.js"></script>
+  <script src="app/controllers.js"></script>
+</body>
+
+</html>
