@@ -48,7 +48,6 @@ body {
 	border-color: #0a63a4;
 	text-decoration: none;
 }
-
 .comprado-true {
 	text-decoration: line-through;
 	color: red;
@@ -82,4 +81,8 @@ body {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+.bot-info-form label {
+	color: #000000;
+	font-weight: 400;
 }

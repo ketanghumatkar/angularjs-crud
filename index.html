@@ -1,8 +1,8 @@
 <!doctype html>
-<html ng-app>
+<html ng-app="ui.bootstrap.demo">
 
 <head>
-  <title>Lista de compras com AngularJS</title>
+  <title>Dashboard | Avaamo</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -13,20 +13,50 @@
 </head>
 
 <body>
-  <div class="container list-container" ng-controller="ListaComprasController">
+  <script type="text/ng-template" id="myModalContent.html">
+    <form class="form-horizontal bot-info-form" name="botInfoForm" novalidate autocomplete="off" ng-init="botDetails=true">
+      <div class="modal-header clearfix">
+          <h3 class="modal-title text-dark" id="modal-title">Create new Agent</h3>
+          <button class="btn btn-blue" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+          <button class="btn btn-blue" type="button" ng-click="$ctrl.ok()">Create Agent</button>
+      </div>
+      <div class="modal-body" id="modal-body">
+          <accordion close-others="true">
+            <accordion-group is-open="botDetails">
+              <fieldset>
+                <div class="form-group">
+                  <label class="col-sm-12 control-label text-dark">Agent name</label>
+                  <div class="col-sm-12 no-padding">
+                    <input type="text" placeholder="Name your  Agent " name="first_name" ng-model="$ctrl.bot.first_name" class="form-control" maxlength="50" required>
+                    <span class="error" ng-show="botInfoForm.first_name.$error.required && submitted">Enter
+                      Agent Name</span>
+                      <span class="error" ng-show="$ctrl.bot.first_name.length>=50"> Agent Name must be less than 50 characters</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-12 control-label text-dark"> Agent description </label>
+                  <div class="col-sm-12 no-padding">
+                    <textarea placeholder="Describe the purpose of your  Agent" name="description" ng-model="$ctrl.bot.description" class="form-control" maxlength="200" required></textarea>
+                    <span class="error" ng-show="botInfoForm.description.$error.required && submitted">Please enter Agent Description</span>
+                  </div>
+                  <span class="error" ng-show="$ctrl.bot.description.length>=200">Agent Description must be less than 200 characters</span>
+                </div>
+              </fieldset>
+            </accordion-group>
+          </accordion>
+      </form>
+  </script>
+  <div class="container list-container" ng-controller="ModalDemoCtrl as $ctrl">
     <div class="row">
       <div class="col-md-3">
         <div class="input-group my-3">
-          <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon1">Search</button>
-          </div>
-          <input type="text" class="form-control" ng-model="search" placeholder=""
+          <input type="text" class="form-control" ng-model="search" placeholder="Search.."
             aria-label="Example text with button addon"
             aria-describedby="button-addon1">
         </div>
       </div>
       <div class="col-md-3 offset-md-6">
-        <button class="btn btn-blue btn-small my-3" ng-click="addItemPopup()">
+        <button class="btn btn-blue btn-small my-3" ng-click="$ctrl.open(bot)">
           <i class="icon-pencil icon-white"></i> Create new agent
         </button>
       </div>
@@ -44,47 +74,40 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="item in itens | filter:search" class="comprado-{{ item.comprado }}">
+            <tr ng-repeat="bot in $ctrl.bots | filter:search" class="comprado-{{ bot.comprado }}">
               <td>
                 <a class="avatar-wrap" ng-href="">
                   <div class="avatar default">
-                    <span>{{item.name.substring(0, 2);}}</span>
+                    <span>{{bot.first_name.substring(0, 2);}}</span>
                   </div>
                 </a>
-                <strong>{{ item.name }}</strong>
+                <strong>{{ bot.first_name }}</strong>
               </td>
-              <td>{{ item.owner }}</td>
-              <td>{{ item.updated_at || 'Jun 26, 07:43 PM'}}</td>
+              <td>{{ bot.owner }}</td>
+              <td>{{ bot.updated_at || 'Jun 26, 07:43 PM'}}</td>
               <td>0</td>
               <td>
                 <button class="btn btn-blue btn-small" ng-click="editarItem($index)">
-                  <i class="icon-pencil icon-white"></i> Edit
+                  Edit
                 </button>
                 <button class="btn btn-blue btn-small" ng-click="deleteItem($index)">
-                  <i class="icon-trash icon-white"></i> Delete
+                   Delete
                 </button>
+                <a class="btn btn-blue btn-small" ng-href="javascript:void(0)">
+                  Test
+                </a>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-
-    <form class="row form-inline" style="display: none;" name="validarValoresPreenchidos">
-      <input type="text" ng-model="item.name" placeholder="Name" required>
-      <input type="text" ng-model="item.owner" placeholder="Owner" class="input-small" required>
-      <button ng-hide="edit" class="btn btn-success" ng-disabled="validarValoresPreenchidos.$invalid"
-        ng-click="adicionaItem()">
-        <i class="icon-plus icon-white"></i> adicionar
-      </button>
-      <button ng-show="edit" class="btn btn-success" ng-disabled="validarValoresPreenchidos.$invalid"
-        ng-click="applyChanges()">
-        <i class="icon-ok icon-white"></i> salvar
-      </button>
-    </form>
   </div>
   <script src="lib/jquery.min.js"></script>
-  <script src="lib/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+  <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
   <script src="lib/toastr.min.js"></script>
   <script src="app/controllers.js"></script>
 </body>
