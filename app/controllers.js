@@ -1,22 +1,25 @@
 angular.module('ui.bootstrap.demo', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
 
-angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl', function ($uibModal, $log, $document) {
+angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl', function ($uibModal, $log, $http, $document) {
+    var api = {
+        list: 'https://c28p8ozu4k.execute-api.us-west-1.amazonaws.com/dev/dispatch_agents',
+        create: 'https://c28p8ozu4k.execute-api.us-west-1.amazonaws.com/dev/dispatch_agents'
+    }
+    var user_access_token = 'e677cb31c8914abcaee9959798383b1e';
     var $ctrl = this;
-
     $ctrl.bot = {};
 
-    $ctrl.bots = [
-        {
-            first_name: 'Leite',
-            owner: 'Ketan Ghumatkar',
-            description: 'Leite description'
-        },
-        {
-            first_name: 'Cerveja',
-            owner: 'Vignesh Shanbhang',
-            description: 'Cerveja description'
-        }
-    ];
+    $http({
+            method: "GET",
+            url: api.list,
+            headers: {
+                'Access-Token': user_access_token,
+                'Content-Type': 'application/json; charset=utf-8;'
+            }
+        })
+    .then(function (response) {
+        $ctrl.bots = response.data;
+    });
 
     $ctrl.deleteItem = function(index){
         $ctrl.bots.splice(index, 1);
@@ -24,9 +27,7 @@ angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl', function ($uibMo
     };
 
     $ctrl.openPopup = function () {
-        $ctrl.bot = {
-            owner: 'Vignesh Shanbhang'
-        }
+        $ctrl.bot = {};
         var modalInstance = $uibModal.open({
             animation: $ctrl.animationsEnabled,
             ariaLabelledBy: 'modal-title',
@@ -46,9 +47,29 @@ angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl', function ($uibMo
         });
 
         modalInstance.result.then(function (bot) {
-            $ctrl.bots.push(bot)
-            $ctrl.bot = {}
-            toastr.success("Agent save successfully");
+                $http({
+                        method: "POST",
+                        url: api.create,
+                        headers: {
+                            'Access-Token': user_access_token,
+                            'Content-Type': 'application/json; charset=utf-8;'
+                        }
+                    })
+                    .then(function (response) {
+                        $http({
+                                method: "GET",
+                                url: api.list,
+                                headers: {
+                                    'Access-Token': user_access_token,
+                                    'Content-Type': 'application/json; charset=utf-8;'
+                                }
+                            })
+                            .then(function (response) {
+                                $ctrl.bots = response.data;
+                            });
+                        $ctrl.bot = {}
+                        toastr.success("Agent save successfully");
+                    });
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });

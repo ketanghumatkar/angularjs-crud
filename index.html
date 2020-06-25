@@ -27,10 +27,10 @@
                 <div class="form-group">
                   <label class="col-sm-12 control-label text-dark">Agent name</label>
                   <div class="col-sm-12 no-padding">
-                    <input type="text" placeholder="Name your  Agent " name="first_name" ng-model="$ctrl.bot.first_name" class="form-control" maxlength="50" required>
-                    <span class="error" ng-show="botInfoForm.first_name.$error.required && submitted">Enter
+                    <input type="text" placeholder="Name your  Agent " name="name" ng-model="$ctrl.bot.name" class="form-control" maxlength="50" required>
+                    <span class="error" ng-show="botInfoForm.name.$error.required && submitted">Enter
                       Agent Name</span>
-                      <span class="error" ng-show="$ctrl.bot.first_name.length>=50"> Agent Name must be less than 50 characters</span>
+                      <span class="error" ng-show="$ctrl.bot.name.length>=50"> Agent Name must be less than 50 characters</span>
                   </div>
                 </div>
                 <div class="form-group">
@@ -78,10 +78,10 @@
               <td>
                 <a class="avatar-wrap" ng-href="">
                   <div class="avatar default">
-                    <span>{{bot.first_name.substring(0, 2);}}</span>
+                    <span>{{bot.name.substring(0, 2);}}</span>
                   </div>
                 </a>
-                <strong>{{ bot.first_name }}</strong>
+                <strong>{{ bot.name }}</strong>
               </td>
               <td>{{ bot.owner }}</td>
               <td>{{ bot.updated_at || 'Jun 26, 07:43 PM'}}</td>
