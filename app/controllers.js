@@ -18,25 +18,15 @@ angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl', function ($uibMo
         }
     ];
 
-    $ctrl.editarItem = function(index){
-        $ctrl.item = $ctrl.bots[index];
-        $ctrl.edit = true;
-    };
-
-    $ctrl.applyChanges = function(index){
-        $ctrl.item = {};
-        $ctrl.edit = false;
-        toastr.success("Item alterado com sucesso.");
-    };
-
     $ctrl.deleteItem = function(index){
         $ctrl.bots.splice(index, 1);
-        toastr.success("Item removido com sucesso.");
+        toastr.success("Agent deleted successfully");
     };
 
-    $ctrl.open = function (size, parentSelector) {
-        var parentElem = parentSelector ?
-            angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
+    $ctrl.openPopup = function () {
+        $ctrl.bot = {
+            owner: 'Vignesh Shanbhang'
+        }
         var modalInstance = $uibModal.open({
             animation: $ctrl.animationsEnabled,
             ariaLabelledBy: 'modal-title',
@@ -44,30 +34,66 @@ angular.module('ui.bootstrap.demo').controller('ModalDemoCtrl', function ($uibMo
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
             controllerAs: '$ctrl',
-            size: size,
-            appendTo: parentElem,
+            size: 'md',
             resolve: {
                 bot: function () {
                     return $ctrl.bot;
+                },
+                edit: function () {
+                    return $ctrl.edit;
                 }
             }
         });
 
         modalInstance.result.then(function (bot) {
-            console.log(bot)
             $ctrl.bots.push(bot)
             $ctrl.bot = {}
-            toastr.success("Agent added successfully");
+            toastr.success("Agent save successfully");
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
 
+    $ctrl.editPopup = function (index) {
+        $ctrl.edit = true
+        $ctrl.bot = $ctrl.bots[index];
+        var modalInstance = $uibModal.open({
+            animation: $ctrl.animationsEnabled,
+            ariaLabelledBy: 'modal-title',
+            ariaDescribedBy: 'modal-body',
+            templateUrl: 'myModalContent.html',
+            controller: 'ModalInstanceCtrl',
+            controllerAs: '$ctrl',
+            size: 'md',
+            resolve: {
+                bot: function () {
+                    return $ctrl.bot;
+                },
+                edit: function () {
+                    return $ctrl.edit;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (bot) {
+            $ctrl.bots[index] = bot;
+            $ctrl.bot = {}
+            $ctrl.edit = false
+            toastr.success("Agent save successfully");
+        }, function () {
+            $ctrl.edit = false
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+
+
 });
 
-angular.module('ui.bootstrap.demo').controller('ModalInstanceCtrl', function ($uibModalInstance, bot) {
+angular.module('ui.bootstrap.demo').controller('ModalInstanceCtrl', function ($uibModalInstance, bot, edit) {
     var $ctrl = this;
     $ctrl.bot = bot;
+    $ctrl.edit = edit || false;
 
     $ctrl.ok = function () {
         $uibModalInstance.close($ctrl.bot);

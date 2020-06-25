@@ -16,9 +16,9 @@
   <script type="text/ng-template" id="myModalContent.html">
     <form class="form-horizontal bot-info-form" name="botInfoForm" novalidate autocomplete="off" ng-init="botDetails=true">
       <div class="modal-header clearfix">
-          <h3 class="modal-title text-dark" id="modal-title">Create new Agent</h3>
+          <h3 class="modal-title text-dark" id="modal-title">{{$ctrl.edit ? 'Edit' : 'Create new'}} Agent</h3>
           <button class="btn btn-blue" type="button" ng-click="$ctrl.cancel()">Cancel</button>
-          <button class="btn btn-blue" type="button" ng-click="$ctrl.ok()">Create Agent</button>
+          <button class="btn btn-blue" type="button" ng-click="$ctrl.ok()">{{$ctrl.edit ? 'Edit' : 'Create'}} Agent</button>
       </div>
       <div class="modal-body" id="modal-body">
           <accordion close-others="true">
@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="col-md-3 offset-md-6">
-        <button class="btn btn-blue btn-small my-3" ng-click="$ctrl.open(bot)">
+        <button class="btn btn-blue btn-small my-3" ng-click="$ctrl.openPopup()">
           <i class="icon-pencil icon-white"></i> Create new agent
         </button>
       </div>
@@ -87,10 +87,10 @@
               <td>{{ bot.updated_at || 'Jun 26, 07:43 PM'}}</td>
               <td>0</td>
               <td>
-                <button class="btn btn-blue btn-small" ng-click="editarItem($index)">
+                <button class="btn btn-blue btn-small" ng-click="$ctrl.editPopup($index)">
                   Edit
                 </button>
-                <button class="btn btn-blue btn-small" ng-click="deleteItem($index)">
+                <button class="btn btn-blue btn-small" ng-click="$ctrl.deleteItem($index)">
                    Delete
                 </button>
                 <a class="btn btn-blue btn-small" ng-href="javascript:void(0)">
